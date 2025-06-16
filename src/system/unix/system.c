@@ -32,6 +32,25 @@
 #include "zenoh-pico/system/platform.h"
 
 /*------------------ Random ------------------*/
+#if defined(ZENOH_QNX)
+void random_buf(void *buf, size_t nbytes) {
+    while (nbytes > sizeof(long)-1) {
+        *((long*)buf) = random();
+        nbytes -= sizeof(long);
+        buf += sizeof(long);
+    }
+    if (nbytes > 0){
+        long rest = random();
+        while (nbytes > 0) {
+            *((unsigned char*)buf) = rest;
+            rest >>= 8;
+            --nbytes;
+            ++buf;
+        }
+    }
+}
+#endif
+
 uint8_t z_random_u8(void) {
     uint8_t ret = 0;
 #if defined(ZENOH_LINUX)
@@ -40,6 +59,8 @@ uint8_t z_random_u8(void) {
     }
 #elif defined(ZENOH_MACOS) || defined(ZENOH_BSD)
     ret = z_random_u32();
+#elif defined(ZENOH_QNX)
+    ret = random();
 #endif
 
     return ret;
@@ -53,6 +74,8 @@ uint16_t z_random_u16(void) {
     }
 #elif defined(ZENOH_MACOS) || defined(ZENOH_BSD)
     ret = z_random_u32();
+#elif defined(ZENOH_QNX)
+    ret = random();
 #endif
 
     return ret;
@@ -66,6 +89,8 @@ uint32_t z_random_u32(void) {
     }
 #elif defined(ZENOH_MACOS) || defined(ZENOH_BSD)
     ret = arc4random();
+#elif defined(ZENOH_QNX)
+    ret = random();
 #endif
 
     return ret;
@@ -81,6 +106,8 @@ uint64_t z_random_u64(void) {
     ret |= z_random_u32();
     ret = ret << 32;
     ret |= z_random_u32();
+#elif defined(ZENOH_QNX)
+    random_buf(&ret, sizeof(ret));
 #endif
 
     return ret;
@@ -93,6 +120,8 @@ void z_random_fill(void *buf, size_t len) {
     }
 #elif defined(ZENOH_MACOS) || defined(ZENOH_BSD)
     arc4random_buf(buf, len);
+#elif defined(ZENOH_QNX)
+    random_buf(buf, len);
 #endif
 }
 
