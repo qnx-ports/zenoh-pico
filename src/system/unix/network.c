@@ -197,6 +197,15 @@ z_result_t _z_open_tcp(_z_sys_net_socket_t *sock, const _z_sys_net_endpoint_t re
 
 #if defined(ZENOH_MACOS) || defined(ZENOH_BSD)
         setsockopt(sock->_fd, SOL_SOCKET, SO_NOSIGPIPE, (void *)0, sizeof(int));
+#elif defined(ZENOH_QNX)
+    #if defined(__QNX__)
+        #if __QNX__ >= 800
+        // QNX 8 or later
+        setsockopt(sock->_fd, SOL_SOCKET, SO_NOSIGPIPE, (void *)0, sizeof(int));
+        #else
+        // QNX 7.x or earlier
+        #endif
+    #endif
 #endif
         struct addrinfo *it = NULL;
         for (it = rep._iptcp; it != NULL; it = it->ai_next) {
@@ -249,6 +258,15 @@ z_result_t _z_listen_tcp(_z_sys_net_socket_t *sock, const _z_sys_net_endpoint_t 
     }
 #if defined(ZENOH_MACOS) || defined(ZENOH_BSD)
     setsockopt(sock->_fd, SOL_SOCKET, SO_NOSIGPIPE, (void *)0, sizeof(int));
+#elif defined(ZENOH_QNX)
+    #if defined(__QNX__)
+        #if __QNX__ >= 800
+        // QNX 8 or later
+        setsockopt(sock->_fd, SOL_SOCKET, SO_NOSIGPIPE, (void *)0, sizeof(int));
+        #else
+        // QNX 7.x or earlier
+        #endif
+    #endif
 #endif
     if (ret != _Z_RES_OK) {
         close(sock->_fd);
