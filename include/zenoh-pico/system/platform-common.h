@@ -20,7 +20,7 @@
 #include "zenoh-pico/api/olv_macros.h"
 #include "zenoh-pico/config.h"
 
-#if defined(ZENOH_LINUX) || defined(ZENOH_MACOS) || defined(ZENOH_BSD)
+#if defined(ZENOH_LINUX) || defined(ZENOH_MACOS) || defined(ZENOH_BSD) || defined(ZENOH_QNX)
 #include "zenoh-pico/system/platform/unix.h"
 #elif defined(ZENOH_WINDOWS)
 #include "zenoh-pico/system/platform/windows.h"
