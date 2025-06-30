@@ -14,6 +14,8 @@
 
 #include "zenoh-pico/system/link/raweth.h"
 
+#if Z_FEATURE_RAWETH_TRANSPORT == 1
+
 #include <arpa/inet.h>
 #include <errno.h>
 #include <ifaddrs.h>
@@ -32,12 +34,9 @@
 #include "zenoh-pico/collections/string.h"
 #include "zenoh-pico/config.h"
 #include "zenoh-pico/protocol/keyexpr.h"
-#include "zenoh-pico/system/link/raweth.h"
 #include "zenoh-pico/system/platform/unix.h"
 #include "zenoh-pico/utils/logging.h"
 #include "zenoh-pico/utils/pointers.h"
-
-#if Z_FEATURE_RAWETH_TRANSPORT == 1
 
 #if !defined(__linux)
 #error "Raweth transport only supported on linux systems"
